@@ -1,6 +1,6 @@
 Config = {}
 
-Config.Core = 'esx' --  or qb
+Config.Core = 'qb' --  or esx
 
 Config.Lang = {
     ["input"] = {
