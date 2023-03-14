@@ -27,6 +27,7 @@
 
 ### Dependency
 * [ox_lib](https://github.com/overextended/ox_lib)
+* [oxmysql](https://github.com/overextended/oxmysql)
 
 ### Compatible
 * ESX or QBcore
