@@ -11,7 +11,7 @@ local nearByVehicle = lib.getNearbyVehicles(GetEntityCoords(PlayerPedId()), 0.3,
         if checkOwner then 
             local plateChangerInput = lib.inputDialog(Config.Lang["input"].title, {{type = 'input', label = Config.Lang["input"].label, description = Config.Lang["input"].desc, icon = {'fa', 'clapperboard'}}})
             if not plateChangerInput then return end
-            local newPlate = string.upper(plateChangerInput[1]:gsub('[%p%c%s]', ''))
+            local newPlate = string.upper(plateChangerInput[1])
             if #newPlate >= 3 and #newPlate <= 8 then 
                 TriggerServerEvent('levii-platechanger:server:updatePlate',NetworkGetNetworkIdFromEntity(vehicle),oldPlate,newPlate)
             else
