@@ -54,7 +54,9 @@ local ESX = exports["es_extended"]:getSharedObject()
 -- Callback
 lib.callback.register('levii-platechanger:server:CheckOwnerVehicle', function(_, oldPlate)
     local xPlayer = ESX.GetPlayerFromId(source)
-    local result = MySQL.single.await('SELECT plate FROM owned_vehicles WHERE plate = ? AND owner = ?', {oldPlate, xPlayer.identifier})
+    print(oldPlate)
+    print(xPlayer.identifier)
+    local result = MySQL.single.await('SELECT plate FROM owned_vehicles WHERE REPLACE (plate, " ", "") = ? AND owner = ?', {oldPlate, xPlayer.identifier})
     if not result then return end  
     return true 
 end)
@@ -66,13 +68,13 @@ RegisterNetEvent('levii-platechanger:server:updatePlate', function(netID, oldPla
     local xPlayer = ESX.GetPlayerFromId(src)
     local checkPlate = MySQL.query.await('SELECT * FROM owned_vehicles WHERE plate = ?', {newPlate})
     if not checkPlate[1] then 
-        MySQL.query('SELECT plate, vehicle FROM owned_vehicles WHERE plate = ?', {oldPlate},function(result)
+        MySQL.query('SELECT plate, vehicle FROM owned_vehicles WHERE REPLACE (plate, " ", "") = ?', {oldPlate},function(result)
             if result[1] then
                 local veh = NetworkGetEntityFromNetworkId(netID)
                 local vehicle = json.decode(result[1].vehicle)
                 vehicle["plate"] = newPlate
-                MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE plate = ?', {json.encode(vehicle),oldPlate})
-                MySQL.update('UPDATE owned_vehicles SET plate = ? WHERE plate = ?', {newPlate,oldPlate})
+                MySQL.update('UPDATE owned_vehicles SET vehicle = ? WHERE REPLACE (plate, " ", "") = ?', {json.encode(vehicle),oldPlate})
+                MySQL.update('UPDATE owned_vehicles SET plate = ? WHERE REPLACE (plate, " ", "") = ?', {newPlate,oldPlate})
                 SetVehicleNumberPlateText(veh,newPlate)
                 TriggerClientEvent('levii-platechanger:client:libNotify', src , Config.Lang['notify'].newlicenseplate ..newPlate, 'success')
                 xPlayer.removeInventoryItem('licenseplate', 1)
